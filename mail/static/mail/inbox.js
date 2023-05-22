@@ -22,6 +22,7 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
+// mailbox = inbox, sent, archive (was in inbox)
 function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
@@ -29,5 +30,18 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
+  // displaying the name of the selected mailbox (inbox / sent / archive) by updating the innerHTML of the emails-view and capitalizing the first character
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // API request
+  fetch(`/emails/${mailbox}`)
+  .then(response => response.json())
+  .then(emails => {
+      // Print emails
+      console.log(emails);
+
+      // ... do something else with emails ...
+  });
+
 }
+

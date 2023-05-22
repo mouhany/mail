@@ -91,7 +91,7 @@ def mailbox(request, mailbox):
     else:
         return JsonResponse({"error": "Invalid mailbox."}, status=400)
 
-    # Return emails in reverse chronologial order
+    # Return emails in reverse chronological order
     emails = emails.order_by("-timestamp").all()
     return JsonResponse([email.serialize() for email in emails], safe=False)
 
