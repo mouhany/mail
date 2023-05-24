@@ -1,16 +1,52 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+
+  let inbox = document.getElementById("inbox");
+  let sent = document.getElementById("sent");
+  let archived = document.getElementById("archived");
+  let compose = document.getElementById("compose");
+
+
   // Use buttons to toggle between views
-  document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
-  document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
-  document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', compose_email);
+  inbox.addEventListener('click', () => {
+    toggle_nav("inbox");
+    load_mailbox('inbox');
+  });
+
+  sent.addEventListener('click', () => {
+    toggle_nav("sent");
+    load_mailbox('sent');
+  });
+
+  archived.addEventListener('click', () => {
+    toggle_nav("archived");
+    load_mailbox('archived');
+  });
+
+  compose.addEventListener('click', compose_email);
+
 
   // By default, load the inbox
   load_mailbox('inbox');
 });
 
+
+function toggle_nav(nav) {
+  let navs = document.querySelectorAll(".nav-link");
+  let selected = document.getElementById(nav);
+
+  navs.forEach(nav => {
+    nav.classList.remove("active");
+  });
+  selected.classList.add('active');
+}
+
+
 function compose_email() {
+  let navs = document.querySelectorAll(".nav-link");
+  navs.forEach(nav => {
+    nav.classList.remove("active");
+  });
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
@@ -21,6 +57,7 @@ function compose_email() {
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
 }
+
 
 // mailbox = inbox, sent, archive (was in inbox)
 function load_mailbox(mailbox) {
@@ -38,7 +75,7 @@ function load_mailbox(mailbox) {
   .then(response => response.json())
   .then(emails => {
       // Print emails
-      console.log(emails);
+      // console.log(emails);
 
       // ... do something else with emails ...
   });

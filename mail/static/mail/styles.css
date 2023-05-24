@@ -2,8 +2,35 @@ textarea {
     min-height: 400px;
 }
 
+
 .sidebar {
     /* background-color: #f0f0f0; */
     height: 100vh;
-    /* padding: 20px; */
+}
+
+
+.compose,
+.compose:hover,
+.compose:active {
+    color: white;
+}
+
+.compose,
+.compose:active {
+    background-color: #002fa7;
+}
+
+.compose:hover {
+    background-color: #00288e;
+}
+
+
+.nav-link.active {
+    background-color: #c6c7c8!important;
+    /* opacity: 50%; */
+}
+
+.nav-link:hover {
+    background-color: #f8f9fa;
+    color: black;
 }

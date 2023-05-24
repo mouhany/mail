@@ -58,12 +58,10 @@
 
 
 
-
-
-
-
 <div class="row">
+    <!-- Sidebar -->
     <div class="p-5 sidebar col-lg-3 col-md-3 col-sm-5 position-fixed bg-white">
+
         <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
             <i class="fs-3 me-2 bi bi-mailbox"></i>
             <span class="fs-3">mail</span>
@@ -72,7 +70,7 @@
         <hr>
 
         <div class="d-grid gap-2">
-            <button class="btn btn-sm btn-danger" id="compose">
+            <button class="btn compose" id="compose">
                 <i class="me-2 bi bi-pencil-square"></i>
                 Compose
             </button>
@@ -80,7 +78,31 @@
 
         <hr>
 
-        <div>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="#" id="inbox" class="nav-link link-body-emphasis active" aria-current="page">
+                    <i class="me-2 bi bi-envelope"></i>
+                    Inbox
+                </a>
+            </li>
+            <li>
+                <a href="#" id="sent" class="nav-link link-body-emphasis">
+                    <i class="me-2 bi bi-send"></i>
+                    Sent
+                </a>
+            </li>
+            <li>
+                <a href="#" id="archived" class="nav-link link-body-emphasis">
+                    <i class="me-2 bi bi-archive"></i>
+                    Archived
+                </a>
+            </li>
+        </ul>
+
+
+
+
+        <!-- <div>
             <button href="#" class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
         </div>
         <div>
@@ -88,7 +110,7 @@
         </div>
         <div>
             <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
-        </div>
+        </div> -->
 
         <hr>
 
@@ -105,6 +127,7 @@
 
     </div>
 
+    <!-- Content -->
     <div class="p-5 col-lg-9 col-md-9 col-sm-7 ms-auto me-0">
 
         <div id="emails-view">
@@ -129,7 +152,6 @@
 
     </div>
 
-    
 </div>
 
 {% endblock %}
