@@ -2,34 +2,136 @@
 {% load static %}
 
 {% block body %}
-    <h2>{{ request.user.email }}</h2>
+<!-- <div class="d-flex sidebar flex-column flex-shrink-0 p-3 bg-light" style="width: 240px;">
 
-    <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
-    <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
-    <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
-    <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
-    <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
+    <a href="/" class="mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <i class="fs-4 me-2 bi bi-mailbox"></i>
+        <span class="fs-4">mail</span>
+    </a>
+
     <hr>
 
-    <div id="emails-view">
+    <div class="d-grid gap-2">
+        <button class="btn btn-sm btn-danger">
+            <i class="me-2 bi bi-pencil-square"></i>
+            Compose
+        </button>
     </div>
 
-    <div id="compose-view">
-        <h3>New Email</h3>
-        <form id="compose-form">
-            <div class="form-group">
-                From: <input disabled class="form-control" value="{{ request.user.email }}">
-            </div>
-            <div class="form-group">
-                To: <input id="compose-recipients" class="form-control">
-            </div>
-            <div class="form-group">
-                <input class="form-control" id="compose-subject" placeholder="Subject">
-            </div>
-            <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
-            <input type="submit" class="btn btn-primary"/>
-        </form>
+    <hr>
+
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="#" class="nav-link active" aria-current="page">
+                <i class="me-2 bi bi-envelope"></i>
+                Inbox
+            </a>
+        </li>
+        <li>
+            <a href="#" class="nav-link link-body-emphasis">
+                <i class="me-2 bi bi-send"></i>
+                Sent
+            </a>
+        </li>
+        <li>
+            <a href="#" class="nav-link link-body-emphasis">
+                <i class="me-2 bi bi-archive"></i>
+                Archived
+            </a>
+        </li>
+    </ul>
+
+    <hr>
+    
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="mx-2 bi bi-person"></i>
+            <strong>{{ request.user.email }}</strong>
+        </a>
+        <ul class="dropdown-menu text-small shadow">
+            <li><a class="dropdown-item" href="#">Log out</a></li>
+        </ul>
     </div>
+
+</div> -->
+
+
+
+
+
+
+
+<div class="row">
+    <div class="p-5 sidebar col-lg-3 col-md-3 col-sm-5 position-fixed bg-white">
+        <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+            <i class="fs-3 me-2 bi bi-mailbox"></i>
+            <span class="fs-3">mail</span>
+        </a>
+
+        <hr>
+
+        <div class="d-grid gap-2">
+            <button class="btn btn-sm btn-danger" id="compose">
+                <i class="me-2 bi bi-pencil-square"></i>
+                Compose
+            </button>
+        </div>
+
+        <hr>
+
+        <div>
+            <button href="#" class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
+        </div>
+
+        <hr>
+
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="mx-2 bi bi-person"></i>
+                <strong>{{ request.user.email }}</strong>
+            </a>
+            <ul class="dropdown-menu text-small shadow">
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="p-5 col-lg-9 col-md-9 col-sm-7 ms-auto me-0">
+
+        <div id="emails-view">
+        </div>
+        
+        <div id="compose-view">
+            <h3>New Email</h3>
+            <form id="compose-form">
+                <div class="form-group">
+                    From: <input disabled class="form-control" value="{{ request.user.email }}">
+                </div>
+                <div class="form-group">
+                    To: <input id="compose-recipients" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" id="compose-subject" placeholder="Subject">
+                </div>
+                <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
+                <input type="submit" class="btn btn-primary" />
+            </form>
+        </div>
+
+    </div>
+
+    
+</div>
+
 {% endblock %}
 
 {% block script %}
