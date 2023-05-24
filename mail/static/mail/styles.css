@@ -1,5 +1,6 @@
 :root {
     --white: 245, 245, 245;
+    --maintransition: all 0.3s linear;
 }
 
 
@@ -9,7 +10,6 @@ textarea {
 
 
 .sidebar {
-    /* background-color: #f0f0f0; */
     height: 100vh;
 }
 
@@ -17,24 +17,22 @@ textarea {
     font-family: comfortaa, sans-serif;
 }
 
-/* .compose,
-.compose:hover,
-.compose:active {
-    color: white;
-}
-
-.compose,
-.compose:active {
-    background-color: #002fa7;
-}
-
-.compose:hover,
-.compose:focus {
-    background-color: #00288e;
-} */
-
+.content,
 .nav-link:hover,
 .nav-link.active {
     background-color: rgba(var(--white), 0.85) !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
     color: black!important;
+}
+
+textarea:focus,
+input:focus {
+    border-color: rgba(20, 20, 2, 0.1)!important;
+    /* box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; */
+    box-shadow: 0 1px 1px rgba(20, 20, 2, 0.075) inset, 0 0 4px rgba(20, 20, 2, 0.2)!important;
+    outline: none!important;
+    transition: var(--maintransition);
 }

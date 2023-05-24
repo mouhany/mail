@@ -43,6 +43,8 @@ function toggle_nav(nav) {
 
 
 function compose_email() {
+
+  // Remove active nav
   let navs = document.querySelectorAll(".nav-link");
   navs.forEach(nav => {
     nav.classList.remove("active");
@@ -59,7 +61,6 @@ function compose_email() {
 }
 
 
-// mailbox = inbox, sent, archive (was in inbox)
 function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
@@ -67,17 +68,23 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
-  // displaying the name of the selected mailbox (inbox / sent / archive) by updating the innerHTML of the emails-view and capitalizing the first character
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
-
+  let title = document.querySelector('#mailbox-title');
+  title.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}`;
+  
   // API request
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
-      // Print emails
-      // console.log(emails);
-
-      // ... do something else with emails ...
+      // Empty
+      if(emails.length == 0) {
+        let div = document.getElementById("content");
+        div.classList.add("text-center")
+        div.innerHTML = "No emails";
+      }
+      // Not empty
+      emails.forEach(email => {
+        // ... do something else with emails ...
+      })
   });
 
 }
