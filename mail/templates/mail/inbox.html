@@ -62,15 +62,15 @@
     <!-- Sidebar -->
     <div class="p-5 sidebar col-lg-3 col-md-3 col-sm-5 position-fixed bg-white">
 
-        <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
-            <i class="fs-3 me-2 bi bi-mailbox"></i>
-            <span class="fs-3">mail</span>
+        <a href="/" class="comfortaa d-flex align-items-center link-body-emphasis text-decoration-none">
+            <i class="fs-2 me-2 bi bi-mailbox"></i>
+            <span class="fs-2">mail</span>
         </a>
 
         <hr>
 
         <div class="d-grid gap-2">
-            <button class="btn compose" id="compose">
+            <button class="btn btn-danger" id="compose">
                 <i class="me-2 bi bi-pencil-square"></i>
                 Compose
             </button>
@@ -87,7 +87,7 @@
             </li>
             <li>
                 <a href="#" id="sent" class="nav-link link-body-emphasis">
-                    <i class="me-2 bi bi-send"></i>
+                    <i class="me-2 bi bi-send-check"></i>
                     Sent
                 </a>
             </li>
@@ -136,17 +136,20 @@
         <div id="compose-view">
             <h3>New Email</h3>
             <form id="compose-form">
-                <div class="form-group">
-                    From: <input disabled class="form-control" value="{{ request.user.email }}">
+                <div class="mb-3">
+                    From: <input disabled class="form-control form-control-sm" value="{{ request.user.email }}">
                 </div>
-                <div class="form-group">
-                    To: <input id="compose-recipients" class="form-control">
+                <div class="mb-3">
+                    To: <input id="compose-recipients" class="form-control form-control-sm">
                 </div>
-                <div class="form-group">
-                    <input class="form-control" id="compose-subject" placeholder="Subject">
+                <div class="mb-3">
+                    <input class="form-control form-control-sm" id="compose-subject" placeholder="Subject">
                 </div>
-                <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
-                <input type="submit" class="btn btn-primary" />
+                <textarea class="mb-3 form-control form-control-sm" id="compose-body" placeholder="Body" rows="6"></textarea>
+                <button type="submit" class="px-5 btn btn-danger">
+                    <!-- <i class="bi bi-send me-1"></i> -->
+                    Send
+                </button>
             </form>
         </div>
 

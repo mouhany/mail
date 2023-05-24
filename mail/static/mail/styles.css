@@ -1,3 +1,8 @@
+:root {
+    --white: 245, 245, 245;
+}
+
+
 textarea {
     min-height: 400px;
 }
@@ -8,8 +13,11 @@ textarea {
     height: 100vh;
 }
 
+.comfortaa {
+    font-family: comfortaa, sans-serif;
+}
 
-.compose,
+/* .compose,
 .compose:hover,
 .compose:active {
     color: white;
@@ -20,17 +28,13 @@ textarea {
     background-color: #002fa7;
 }
 
-.compose:hover {
+.compose:hover,
+.compose:focus {
     background-color: #00288e;
-}
+} */
 
-
+.nav-link:hover,
 .nav-link.active {
-    background-color: #c6c7c8!important;
-    /* opacity: 50%; */
-}
-
-.nav-link:hover {
-    background-color: #f8f9fa;
-    color: black;
+    background-color: rgba(var(--white), 0.85) !important;
+    color: black!important;
 }
