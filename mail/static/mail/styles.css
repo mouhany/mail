@@ -3,11 +3,9 @@
     --maintransition: all 0.3s linear;
 }
 
-
 textarea {
     min-height: 400px;
 }
-
 
 .sidebar {
     height: 100vh;
