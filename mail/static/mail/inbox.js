@@ -83,11 +83,11 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   let emailsView = document.querySelector("#emails-view");
-  emailsView.innerHTML = `<h3 id="mailbox-title" class="comfortaa px-3 d-inline-block">${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  emailsView.innerHTML = `<h3 id="mailbox-title" class="align-middle comfortaa px-3 d-inline-block">${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   // Response message (email sent)
   let responseMessage = document.createElement("span");
-  responseMessage.setAttribute("class", "ms-3 small text-secondary");
+  responseMessage.setAttribute("class", "ms-3 align-text-bottom small text-secondary");
   responseMessage.setAttribute("id", "successmessage");
 
   // Gray box
@@ -109,20 +109,16 @@ function load_mailbox(mailbox) {
   // Append tbody to table
   table.appendChild(tbody);
 
-  // if (mailbox == "sent") {
-  //   table.setAttribute("id", "emailsent");
-  // } else if (mailbox == "inbox") {
-  //   table.setAttribute("id", "emailinbox");
-  // } else {
-  //   table.setAttribute("id", "emailarchive");
-  // }
-
-// API request
-fetch(`/emails/${mailbox}`)
-.then(response => response.json())
-.then(emails => {
-  
+  // API request
+  fetch(`/emails/${mailbox}`)
+  .then(response => response.json())
+  .then(emails => {
+    if (emails.length == 0){
+      grayBox.classList.add("text-center");
+      grayBox.innerHTML = "No emails.";
+    }
       // Not empty
+    try {
       emails.forEach(email => {
         // email
         let tr = document.createElement("tr");
@@ -140,12 +136,8 @@ fetch(`/emails/${mailbox}`)
         let tdSender = document.createElement("td");
         tdSender.setAttribute("class", "col-3 align-middle");
         if (mailbox == "sent") {
-          // let recipientsName = `${email.recipients}`.split("@");
-          // tdSender.innerHTML = recipientsName[0].charAt(0).toUpperCase() + recipientsName[0].slice(1);
           tdSender.innerHTML = `${email.recipients}`;
         } else {
-          // let senderName = `${email.sender}`.split("@");
-          // tdSender.innerHTML = senderName[0].charAt(0).toUpperCase() + senderName[0].slice(1);
           tdSender.innerHTML = `${email.sender}`;
         }
         
@@ -159,7 +151,6 @@ fetch(`/emails/${mailbox}`)
         tdTimestamp.setAttribute("class", "col-2 align-middle text-end");
         let splitDate = `${email.timestamp}`.split(",");
         tdTimestamp.innerHTML = splitDate[0];
-        // tdTimestamp.innerHTML = `${email.timestamp}`;
 
         tr.appendChild(tdArchive);
         tr.appendChild(tdSender);
@@ -168,17 +159,16 @@ fetch(`/emails/${mailbox}`)
 
         tbody.appendChild(tr);
       });
-
-      // Empty
-      if(emails.length == 0) {
-        grayBox.classList.add("text-center");
-        grayBox.innerHTML = "No emails";
-      }
-  });
+    } catch(err) {
+      grayBox.classList.add("text-center");
+      grayBox.innerHTML = "No emails.";
+    }
+    });
 
   // Add table to gray box
   grayBox.appendChild(table);
 }
+
 
 function send() {
   let recipients = document.querySelector("#compose-recipients").value;
@@ -195,18 +185,13 @@ function send() {
   })
   .then(response => response.json())
   .then(result => {
-    // Print result
-    let errormessage = document.querySelector("#errormessage"); // in compose mail view
-    let successmessage = document.querySelector("#successmessage"); // in sent mailbox view
-
-    let message = document.createElement("span");
-    message.setAttribute("class", "ms-3 small");
-
     if ("message" in result) {
-      load_mailbox("sent");
-      successmessage.innerHTML = result["message"];
+      toggle_nav('sent');
+      load_mailbox('sent');
+      console.log(result["message"]);
+      document.querySelector("#successmessage").innerHTML = result["message"];
     } else {
-      errormessage.innerHTML = result["error"];
+      document.querySelector("#errormessage").innerHTML = result["error"];
     }
 });
 return false;

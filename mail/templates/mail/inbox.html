@@ -52,7 +52,7 @@
                     <strong>{{ request.user.email }}</strong>
                 </button>
                 <div  id="dashboard-collapse" class="collapse ms-3">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ms-3">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal ms-3">
                         <li><a href="{% url 'logout' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded ms-1">Log Out</a></li>
                     </ul>
                 </div>
@@ -66,7 +66,7 @@
 
         <!-- Mailboxes -->
         <div id="emails-view">
-            <!-- static/mail/inbox.js -->
+            
         </div>
         
         <!-- Compose mail -->
@@ -91,6 +91,12 @@
                     <span class="ms-3 small text-danger" id="errormessage"></span>
                 </form>
             </div>
+        </div>
+
+        <!-- Single email -->
+        <div id="email-view">
+            <!-- <div style="background-color:red;">single email view</div> -->
+            <!-- static/mail/inbox.js -->
         </div>
 
     </div>
