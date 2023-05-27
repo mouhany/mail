@@ -15,7 +15,8 @@ textarea {
     font-family: comfortaa, sans-serif;
 }
 
-.content,
+.content-mailbox,
+.content-compose,
 .nav-link:hover,
 .nav-link.active {
     background-color: rgba(var(--white), 0.85) !important;

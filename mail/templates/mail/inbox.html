@@ -11,9 +11,7 @@
             <i class="fs-2 me-2 bi bi-mailbox"></i>
             <span class="fs-2">mail</span>
         </a>
-
         <hr>
-
         <!-- Compose button -->
         <div class="d-grid gap-2">
             <button class="btn btn-danger" id="compose">
@@ -21,9 +19,7 @@
                 Compose
             </button>
         </div>
-
         <hr>
-
         <!-- Mailboxes -->
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
@@ -45,9 +41,7 @@
                 </a>
             </li>
         </ul>
-
         <hr>
-
         <!-- Account -->
         <ul class="list-unstyled ps-0">
             <li class="mb-1">
@@ -72,35 +66,13 @@
 
         <!-- Mailboxes -->
         <div id="emails-view">
-            <h3 id="mailbox-title" class="comfortaa px-3"></h3>
-            <div class="content rounded px-3 py-4" id="content">
-                <!-- <table class="table table-hover" id="emailcontainer">
-                    <tr>
-                        <td class="col-1">
-                            <button class="btn btn-sm btn-danger">
-                                <i class="bi bi-archive"></i>
-                            </button>
-                        </td>
-                        <td class="col-3 align-middle">
-                            Lorem Ipsum
-                        </td>
-                        <td class="col-6 align-middle">
-                            Lorem ipsum dolor sit amet consectetur.
-                        </td>
-                        <td class="col-2 align-middle text-end">
-                            07:03 AM
-                        </td>
-                    </tr>
-                </table> -->
-
-            </div>
-
+            <!-- static/mail/inbox.js -->
         </div>
         
         <!-- Compose mail -->
         <div id="compose-view">
-            <h3 class="comfortaa px-3">New Email</h3>
-            <div class="content rounded px-3 py-4">
+            <h3 class="comfortaa px-3 d-inline-block">New Email</h3>
+            <div class="content-compose rounded px-3 py-4">
                 <form id="compose-form">
                     <div class="mb-3">
                         From: <input disabled class="form-control form-control-sm" value="{{ request.user.email }}">
@@ -116,6 +88,7 @@
                         <i class="bi bi-send me-1"></i>
                         Send
                     </button>
+                    <span class="ms-3 small text-danger" id="errormessage"></span>
                 </form>
             </div>
         </div>
