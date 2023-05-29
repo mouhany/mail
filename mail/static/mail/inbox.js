@@ -2,17 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Use nav in sidebar to toggle between mailboxes, compose, and send mail
   document.querySelector("#inbox").addEventListener('click', () => {
-    toggle_nav('inbox');
     load_mailbox('inbox');
   });
 
   document.querySelector("#sent").addEventListener('click', () => {
-    toggle_nav('sent');
     load_mailbox('sent');
   });
 
   document.querySelector("#archived").addEventListener('click', () => {
-    toggle_nav('archived');
     load_mailbox('archived');
   });
 
@@ -28,29 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
   load_mailbox('inbox');
 });
 
+
 ////////////////////////////////////////////////////////////////////
-
-function toggle_nav(selected) {
-  let navs = document.querySelectorAll('.nav-link');
-  let active = document.getElementById(selected);
-
-  navs.forEach(nav => {
-    nav.classList.remove('active');
-  });
-  active.classList.add('active');
-}
-
-
-function toggle_content(selected) {
-  let contents = document.querySelectorAll('.content-mailbox');
-  let active = document.getElementById(selected);
-
-  contents.forEach(content => {
-    content.classList.remove('d-block');
-    content.classList.add('d-none');
-  });
-  active.classList.add('d-block');
-}
 
 
 function compose_email() {
@@ -65,6 +41,7 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
@@ -74,11 +51,38 @@ function compose_email() {
 }
 
 
+// TODO: HTML part
+function load_email(id) {
+  fetch(`/emails/${id}`)
+  .then(response => response.json())
+  .then(email => {
+      // Print email
+      console.log(`id = ${email.id}`);
+      console.log(`sender = ${email.sender}`);
+      console.log(`subject = ${email.subject}`);
+      console.log(`recipients = ${email.recipients}`);
+      console.log(`body = ${email.body}`);
+      console.log(`timestamp = ${email.timestamp}`);
+      console.log(`read = ${email.read}`);
+      console.log(`archived = ${email.archived}`);
+      
+  });
+}
+
+
 function load_mailbox(mailbox) {
-  toggle_content(mailbox);
+  // Toggle nav in sidebar
+  let navs = document.querySelectorAll('.nav-link');
+  let active = document.getElementById(mailbox);
+
+  navs.forEach(nav => {
+    nav.classList.remove('active');
+  });
+  active.classList.add('active');
 
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
+  document.querySelector('#email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
@@ -92,7 +96,7 @@ function load_mailbox(mailbox) {
 
   // Gray box
   let grayBox = document.createElement("div");
-  grayBox.setAttribute("class", "content-mailbox rounded px-3 py-4");
+  grayBox.setAttribute("class", "content-mailbox rounded py-4");
   grayBox.setAttribute("id", "emailscontainer");
 
   // Append responseMessage and grayBox to emailsView
@@ -123,7 +127,8 @@ function load_mailbox(mailbox) {
         // email
         let tr = document.createElement("tr");
         tr.setAttribute("type", "button");
-
+        tr.setAttribute("onclick", `load_email(${email.id})`);
+        
         // email > archive
         let tdArchive = document.createElement("td");
         tdArchive.setAttribute("class", "col-1 align-middle");
@@ -186,7 +191,6 @@ function send() {
   .then(response => response.json())
   .then(result => {
     if ("message" in result) {
-      toggle_nav('sent');
       load_mailbox('sent');
       console.log(result["message"]);
       document.querySelector("#successmessage").innerHTML = result["message"];
