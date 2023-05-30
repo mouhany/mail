@@ -53,20 +53,35 @@ function compose_email() {
 
 // TODO: HTML part
 function load_email(id) {
+  // Show single email view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'block';
+  document.querySelector('#compose-view').style.display = 'none';
+
+  // Show the mailbox name
+  let emailView = document.querySelector('#email-view');
+  emailView.innerHTML = `<h3 id="mailbox-title" class="align-middle comfortaa px-3 d-inline-block">Email</h3>`;
+
+  // Gray box
+  let grayBox = document.createElement("div");
+  grayBox.setAttribute("class", "content rounded px-3 py-4");
+  grayBox.setAttribute("id", "emailcontainer");
+
   fetch(`/emails/${id}`)
   .then(response => response.json())
   .then(email => {
-      // Print email
-      console.log(`id = ${email.id}`);
-      console.log(`sender = ${email.sender}`);
-      console.log(`subject = ${email.subject}`);
-      console.log(`recipients = ${email.recipients}`);
-      console.log(`body = ${email.body}`);
-      console.log(`timestamp = ${email.timestamp}`);
-      console.log(`read = ${email.read}`);
-      console.log(`archived = ${email.archived}`);
-      
+    // console.log(`id = ${email.id}`);
+    // console.log(`sender = ${email.sender}`);
+    // console.log(`subject = ${email.subject}`);
+    // console.log(`recipients = ${email.recipients}`);
+    // console.log(`body = ${email.body}`);
+    // console.log(`timestamp = ${email.timestamp}`);
+    // console.log(`read = ${email.read}`);
+    // console.log(`archived = ${email.archived}`);
+    grayBox.innerHTML = `<p>from: ${email.sender} <br> to: ${email.recipients} <br> timestamp: ${email.timestamp} <br><br> subject: ${email.subject} <br><br> ${email.body}</p>`;
   });
+
+  emailView.append(grayBox);
 }
 
 
@@ -89,28 +104,25 @@ function load_mailbox(mailbox) {
   let emailsView = document.querySelector("#emails-view");
   emailsView.innerHTML = `<h3 id="mailbox-title" class="align-middle comfortaa px-3 d-inline-block">${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
-  // Response message (email sent)
+  // Response message (sent)
   let responseMessage = document.createElement("span");
   responseMessage.setAttribute("class", "ms-3 align-text-bottom small text-secondary");
   responseMessage.setAttribute("id", "successmessage");
 
   // Gray box
   let grayBox = document.createElement("div");
-  grayBox.setAttribute("class", "content-mailbox rounded py-4");
+  grayBox.setAttribute("class", "content rounded px-3 py-4");
   grayBox.setAttribute("id", "emailscontainer");
 
-  // Append responseMessage and grayBox to emailsView
   emailsView.append(responseMessage);
   emailsView.append(grayBox);
 
   // Table
   let table = document.createElement("table");
-  table.setAttribute("class", "table table-hover mb-0");
-
+  table.setAttribute("class", "table border-opacity-10 mb-0");
   let tbody = document.createElement("tbody");
   tbody.setAttribute("class", "border-top");
 
-  // Append tbody to table
   table.appendChild(tbody);
 
   // API request
@@ -127,7 +139,22 @@ function load_mailbox(mailbox) {
         // email
         let tr = document.createElement("tr");
         tr.setAttribute("type", "button");
-        tr.setAttribute("onclick", `load_email(${email.id})`);
+        tr.addEventListener('click', () => {
+          fetch(`/emails/${email.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              read: true
+            })
+          });
+          load_email(`${email.id}`);
+        })
+
+        // Background color for read / unread emails
+        if (email.read) {
+          tr.setAttribute("class", "read");
+        } else {
+          tr.setAttribute("class", "fw-semibold");
+        }
         
         // email > archive
         let tdArchive = document.createElement("td");
@@ -135,12 +162,13 @@ function load_mailbox(mailbox) {
         let tdArchiveButton = document.createElement("button");
         tdArchiveButton.setAttribute("class", "btn btn-sm btn-danger");
         tdArchiveButton.innerHTML = `<i class="bi bi-archive"></i>`;
+
         tdArchive.appendChild(tdArchiveButton);
 
         // email > sender/recipient
         let tdSender = document.createElement("td");
         tdSender.setAttribute("class", "col-3 align-middle");
-        if (mailbox == "sent") {
+        if (mailbox === "sent") {
           tdSender.innerHTML = `${email.recipients}`;
         } else {
           tdSender.innerHTML = `${email.sender}`;
@@ -148,7 +176,7 @@ function load_mailbox(mailbox) {
         
         // email > subject
         let tdSubject = document.createElement("td");
-        tdSubject.setAttribute("class", "col-6 align-middle");
+        tdSubject.setAttribute("class", "col-6 align-middle text-truncate");
         tdSubject.innerHTML = `${email.subject}`;
 
         // email > timestamp
@@ -168,9 +196,8 @@ function load_mailbox(mailbox) {
       grayBox.classList.add("text-center");
       grayBox.innerHTML = "No emails.";
     }
-    });
+  });
 
-  // Add table to gray box
   grayBox.appendChild(table);
 }
 
@@ -181,22 +208,22 @@ function send() {
   let body = document.querySelector("#compose-body").value;
 
   fetch('/emails', {
-  method: 'POST',
-  body: JSON.stringify({
+    method: 'POST',
+    body: JSON.stringify({
       recipients: recipients,
       subject: subject,
       body: body
-  })
+    })
   })
   .then(response => response.json())
   .then(result => {
     if ("message" in result) {
       load_mailbox('sent');
-      console.log(result["message"]);
       document.querySelector("#successmessage").innerHTML = result["message"];
     } else {
       document.querySelector("#errormessage").innerHTML = result["error"];
     }
-});
-return false;
+  });
+
+  return false;
 }

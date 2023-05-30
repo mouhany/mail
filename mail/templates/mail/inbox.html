@@ -7,7 +7,7 @@
     <div class="px-4 pt-5 col-lg-3">
 
         <!-- Title -->
-        <a href="/" class="comfortaa d-flex align-items-center link-body-emphasis text-decoration-none">
+        <a href="/" class="align-middle comfortaa px-3 d-inline-block link-body-emphasis text-decoration-none link-body-emphasis text-decoration-none">
             <i class="fs-2 me-2 bi bi-mailbox"></i>
             <span class="fs-2">mail</span>
         </a>
@@ -43,7 +43,7 @@
         </ul>
         <hr>
         <!-- Account -->
-        <ul class="list-unstyled ps-0">
+        <ul class="list-unstyled ps-1">
             <li class="mb-1">
                 <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse"
                     data-bs-target="#dashboard-collapse" aria-expanded="false">
@@ -71,7 +71,7 @@
         <!-- Compose mail -->
         <div id="compose-view">
             <h3 class="comfortaa px-3 d-inline-block">New Email</h3>
-            <div class="content-compose rounded px-3 py-4">
+            <div class="content rounded px-3 py-4">
                 <form id="compose-form">
                     <div class="mb-3">
                         From: <input disabled class="form-control form-control-sm" value="{{ request.user.email }}">
@@ -94,7 +94,6 @@
 
         <!-- Single email -->
         <div id="email-view">
-            <!-- <div style="background-color:red;">single email view</div> -->
         </div>
 
     </div>

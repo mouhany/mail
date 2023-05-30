@@ -15,8 +15,12 @@ textarea {
     font-family: comfortaa, sans-serif;
 }
 
-.content-mailbox,
-.content-compose,
+.content {
+    background-color: white !important;
+    /* background-color: rgba(var(--white), 0.85) !important; */
+}
+
+.read,
 .nav-link:hover,
 .nav-link.active {
     background-color: rgba(var(--white), 0.85) !important;
@@ -28,10 +32,14 @@ textarea {
 }
 
 textarea:focus,
-input:focus {
+input:focus,
+tr:hover {
     border-color: rgba(20, 20, 2, 0.1)!important;
-    /* box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; */
-    box-shadow: 0 1px 1px rgba(20, 20, 2, 0.075) inset, 0 0 4px rgba(20, 20, 2, 0.2)!important;
+    box-shadow: rgba(14, 30, 37, 0.05) 0px 2px 4px 0px, rgba(14, 30, 37, 0.2) 0px 2px 16px 0px!important;
     outline: none!important;
     transition: var(--maintransition);
+}
+
+.table {
+    table-layout: fixed;
 }
