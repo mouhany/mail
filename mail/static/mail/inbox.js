@@ -9,16 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
     load_mailbox('sent');
   });
 
-  document.querySelector("#archived").addEventListener('click', () => {
-    load_mailbox('archived');
+  document.querySelector("#archive").addEventListener('click', () => {
+    load_mailbox('archive');
   });
 
   document.querySelector("#compose").addEventListener('click', compose_email);
 
   document.querySelector("#compose-form").onsubmit = () => {
-    send();
+    send_email();
     // Stop form from submitting
-    return false;
+    // return false;
   };
 
   // By default, load the inbox
@@ -36,8 +36,9 @@ function compose_email() {
     nav.classList.remove('active');
   });
 
-  // Delete error message (if any)
+  // Delete error message (if any) and reset title
   document.querySelector('#errormessage').innerHTML = "";
+  document.querySelector("#compose-title").innerHTML = "New Email";
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
@@ -50,38 +51,80 @@ function compose_email() {
   document.querySelector("#compose-body").value = '';
 }
 
-
-// TODO: HTML part
+// Including reply and archive/unarchive function
 function load_email(id) {
   // Show single email view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
 
-  // Show the mailbox name
   let emailView = document.querySelector('#email-view');
-  emailView.innerHTML = `<h3 id="mailbox-title" class="align-middle comfortaa px-3 d-inline-block">Email</h3>`;
-
-  // Gray box
-  let grayBox = document.createElement("div");
-  grayBox.setAttribute("class", "content rounded px-3 py-4");
-  grayBox.setAttribute("id", "emailcontainer");
+  emailView.setAttribute("class", "content rounded px-3");
 
   fetch(`/emails/${id}`)
   .then(response => response.json())
   .then(email => {
-    // console.log(`id = ${email.id}`);
-    // console.log(`sender = ${email.sender}`);
-    // console.log(`subject = ${email.subject}`);
-    // console.log(`recipients = ${email.recipients}`);
-    // console.log(`body = ${email.body}`);
-    // console.log(`timestamp = ${email.timestamp}`);
-    // console.log(`read = ${email.read}`);
-    // console.log(`archived = ${email.archived}`);
-    grayBox.innerHTML = `<p>from: ${email.sender} <br> to: ${email.recipients} <br> timestamp: ${email.timestamp} <br><br> subject: ${email.subject} <br><br> ${email.body}</p>`;
-  });
+    emailView.innerHTML = `
+    <h5 class="fw-semibold mb-4">${email.subject}</h5>
+    <div class="row">
+        <div class="small col-sm-1">From:</div>
+        <div class="small col-sm-6 ms-3">${email.sender}</div>
+    </div>
+    <div class="row">
+        <div class="small col-sm-1">To:</div>
+        <div class="small col-sm-6 ms-3">${email.recipients}</div>
+    </div>
+    <div class="row mb-4">
+        <div class="small col-sm-1">Time:</div>
+        <div class="small col-sm-6 ms-3">${email.timestamp}</div>
+    </div>
+    <div class="mb-5">${email.body}</div>
+    `;
 
-  emailView.append(grayBox);
+    // Archive
+    let archiveButton = document.createElement("button");
+    archiveButton.setAttribute("class", "btn btn-danger me-5");
+    archiveButton.innerHTML = "Archive";
+    
+    archiveButton.addEventListener('click', () => {
+      fetch(`/emails/${email.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          archived: true
+        })
+      });
+      load_mailbox('archive');
+    })
+
+    // Reply
+    let replyButton = document.createElement("button");
+    replyButton.setAttribute("class", "btn btn-danger");
+    replyButton.innerHTML = "Reply";
+    
+    replyButton.addEventListener('click', () => {
+      compose_email();
+
+      document.querySelector("#compose-title").innerHTML = "Reply Email";
+      document.querySelector("#compose-recipients").value = `${email.sender}`;
+
+      if (`${email.subject}`.startsWith("Re: ")) {
+        document.querySelector("#compose-subject").value = `${email.subject}`;
+      } else {
+        document.querySelector("#compose-subject").value = `Re: ${email.subject}`;
+      }
+
+      let splitDate = `${email.timestamp}`.split(",");
+      // https://stackoverflow.com/questions/24498570/how-can-i-insert-or-remove-a-tab-before-after-every-new-line-in-a-string-with
+      document.querySelector("#compose-body").value = `\n\n\tOn ${splitDate[0]} at${splitDate[1]} <${email.sender}> wrote:\n\n ${email.body.replace(/^/gm, "\t")}`;
+      document.querySelector("#compose-body").focus();
+      document.querySelector("#compose-body").setSelectionRange(0,0);
+
+    })
+
+    emailView.append(archiveButton);
+    emailView.append(replyButton);
+
+  });
 }
 
 
@@ -119,7 +162,7 @@ function load_mailbox(mailbox) {
 
   // Table
   let table = document.createElement("table");
-  table.setAttribute("class", "table border-opacity-10 mb-0");
+  table.setAttribute("class", "table mb-0");
   let tbody = document.createElement("tbody");
   tbody.setAttribute("class", "border-top");
 
@@ -129,14 +172,14 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
+    // Empty
     if (emails.length == 0){
       grayBox.classList.add("text-center");
       grayBox.innerHTML = "No emails.";
     }
-      // Not empty
+    // Not empty
     try {
       emails.forEach(email => {
-        // email
         let tr = document.createElement("tr");
         tr.setAttribute("type", "button");
         tr.addEventListener('click', () => {
@@ -155,19 +198,10 @@ function load_mailbox(mailbox) {
         } else {
           tr.setAttribute("class", "fw-semibold");
         }
-        
-        // email > archive
-        let tdArchive = document.createElement("td");
-        tdArchive.setAttribute("class", "col-1 align-middle");
-        let tdArchiveButton = document.createElement("button");
-        tdArchiveButton.setAttribute("class", "btn btn-sm btn-danger");
-        tdArchiveButton.innerHTML = `<i class="bi bi-archive"></i>`;
-
-        tdArchive.appendChild(tdArchiveButton);
 
         // email > sender/recipient
         let tdSender = document.createElement("td");
-        tdSender.setAttribute("class", "col-3 align-middle");
+        tdSender.setAttribute("class", "ps-3 col-3 align-middle");
         if (mailbox === "sent") {
           tdSender.innerHTML = `${email.recipients}`;
         } else {
@@ -177,22 +211,21 @@ function load_mailbox(mailbox) {
         // email > subject
         let tdSubject = document.createElement("td");
         tdSubject.setAttribute("class", "col-6 align-middle text-truncate");
-        tdSubject.innerHTML = `${email.subject}`;
+        tdSubject.innerHTML = `${email.subject} <span class="fw-normal small"> - ${email.body} </span>`;
 
         // email > timestamp
         let tdTimestamp = document.createElement("td");
-        tdTimestamp.setAttribute("class", "col-2 align-middle text-end");
+        tdTimestamp.setAttribute("class", "pe-3 col-3 align-middle text-end");
         let splitDate = `${email.timestamp}`.split(",");
         tdTimestamp.innerHTML = splitDate[0];
 
-        tr.appendChild(tdArchive);
         tr.appendChild(tdSender);
         tr.appendChild(tdSubject);
         tr.appendChild(tdTimestamp);
 
         tbody.appendChild(tr);
       });
-    } catch(err) {
+    } catch(err) { // just in case
       grayBox.classList.add("text-center");
       grayBox.innerHTML = "No emails.";
     }
@@ -202,7 +235,7 @@ function load_mailbox(mailbox) {
 }
 
 
-function send() {
+function send_email() {
   let recipients = document.querySelector("#compose-recipients").value;
   let subject = document.querySelector("#compose-subject").value;
   let body = document.querySelector("#compose-body").value;
