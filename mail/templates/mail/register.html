@@ -13,7 +13,7 @@
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
         <div class="mb-3">
-            <input autofocus autocomplete="off" class="form-control form-control-sm" type="email" name="email" placeholder="Email Address">
+            <input autofocus class="form-control form-control-sm" type="email" name="email" placeholder="Email Address">
         </div>
         <div class="mb-3">
             <input class="form-control form-control-sm" type="password" name="password" placeholder="Password">

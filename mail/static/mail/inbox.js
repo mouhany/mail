@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector("#compose-form").onsubmit = () => {
     send_email();
     // Stop form from submitting
-    // return false;
+    return false;
   };
 
   // By default, load the inbox
@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 ////////////////////////////////////////////////////////////////////
+
+
+function message(elementSelector, sentence) {
+  document.querySelector(elementSelector).innerHTML = sentence;
+  setTimeout(() => {
+    document.querySelector(elementSelector).innerHTML = '';
+  }, 2000);
+}
 
 
 function compose_email() {
@@ -51,8 +59,8 @@ function compose_email() {
   document.querySelector("#compose-body").value = '';
 }
 
-// Including reply and archive/unarchive function
-function load_email(id) {
+// Including reply and archive/unarchive functions
+function load_email(id, mailbox) {
   // Show single email view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'block';
@@ -78,25 +86,54 @@ function load_email(id) {
         <div class="small col-sm-1">Time:</div>
         <div class="small col-sm-6 ms-3">${email.timestamp}</div>
     </div>
-    <div class="mb-5">${email.body}</div>
+    <hr>
     `;
 
-    // Archive
-    let archiveButton = document.createElement("button");
-    archiveButton.setAttribute("class", "btn btn-danger me-5");
-    archiveButton.innerHTML = "Archive";
-    
-    archiveButton.addEventListener('click', () => {
-      fetch(`/emails/${email.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          archived: true
-        })
-      });
-      load_mailbox('archive');
-    })
+    let body = document.createElement("div");
+    body.innerHTML = email.body;
 
-    // Reply
+    let line = document.createElement("hr");
+
+    emailView.append(body);
+    emailView.append(line);
+
+    // Create button to archive / unarchive email
+    if (mailbox !== 'sent') {
+      let archiveButton = document.createElement("button");
+      archiveButton.setAttribute("class", "btn btn-danger me-5");
+
+      if (mailbox == 'inbox') {
+        archiveButton.innerHTML = "Archive";
+        archiveButton.addEventListener('click', () => {
+          fetch(`/emails/${email.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              archived: true
+            })
+          });
+          load_mailbox('inbox');
+          message("#successmessage", "Email has been moved to Archive!");
+        })
+      } else if (mailbox == 'archive') {
+        archiveButton.innerHTML = "Unarchive";
+        archiveButton.addEventListener('click', () => {
+          fetch(`/emails/${email.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              archived: false
+            })
+          });
+          load_mailbox('inbox');
+          message("#successmessage", "Email has been removed from Archive!");
+        })
+      }
+      
+      emailView.append(archiveButton);
+    }
+
+    // Create button to reply email and add white-space
+    body.setAttribute("style", "white-space: pre;");
+    
     let replyButton = document.createElement("button");
     replyButton.setAttribute("class", "btn btn-danger");
     replyButton.innerHTML = "Reply";
@@ -105,23 +142,20 @@ function load_email(id) {
       compose_email();
 
       document.querySelector("#compose-title").innerHTML = "Reply Email";
-      document.querySelector("#compose-recipients").value = `${email.sender}`;
-
-      if (`${email.subject}`.startsWith("Re: ")) {
-        document.querySelector("#compose-subject").value = `${email.subject}`;
+      document.querySelector("#compose-recipients").value = email.sender;
+      if (email.subject.startsWith("Re: ")) {
+        document.querySelector("#compose-subject").value = email.subject;
       } else {
         document.querySelector("#compose-subject").value = `Re: ${email.subject}`;
       }
 
-      let splitDate = `${email.timestamp}`.split(",");
-      // https://stackoverflow.com/questions/24498570/how-can-i-insert-or-remove-a-tab-before-after-every-new-line-in-a-string-with
-      document.querySelector("#compose-body").value = `\n\n\tOn ${splitDate[0]} at${splitDate[1]} <${email.sender}> wrote:\n\n ${email.body.replace(/^/gm, "\t")}`;
+      let splitDate = email.timestamp.split(",");
+      document.querySelector("#compose-body").value = `\n\n\t<<<<<\tOn ${splitDate[0]} at${splitDate[1]} ${email.sender} wrote:\t >>>>>\n\n ${email.body}`;
       document.querySelector("#compose-body").focus();
       document.querySelector("#compose-body").setSelectionRange(0,0);
 
     })
 
-    emailView.append(archiveButton);
     emailView.append(replyButton);
 
   });
@@ -153,12 +187,12 @@ function load_mailbox(mailbox) {
   responseMessage.setAttribute("id", "successmessage");
 
   // Gray box
-  let grayBox = document.createElement("div");
-  grayBox.setAttribute("class", "content rounded px-3 py-4");
-  grayBox.setAttribute("id", "emailscontainer");
+  let emailsContainer = document.createElement("div");
+  emailsContainer.setAttribute("class", "content rounded px-3 py-4");
+  emailsContainer.setAttribute("id", "emailscontainer");
 
   emailsView.append(responseMessage);
-  emailsView.append(grayBox);
+  emailsView.append(emailsContainer);
 
   // Table
   let table = document.createElement("table");
@@ -174,8 +208,8 @@ function load_mailbox(mailbox) {
   .then(emails => {
     // Empty
     if (emails.length == 0){
-      grayBox.classList.add("text-center");
-      grayBox.innerHTML = "No emails.";
+      emailsContainer.classList.add("text-center");
+      emailsContainer.innerHTML = "No emails.";
     }
     // Not empty
     try {
@@ -189,7 +223,7 @@ function load_mailbox(mailbox) {
               read: true
             })
           });
-          load_email(`${email.id}`);
+          load_email(`${email.id}`, mailbox);
         })
 
         // Background color for read / unread emails
@@ -201,7 +235,7 @@ function load_mailbox(mailbox) {
 
         // email > sender/recipient
         let tdSender = document.createElement("td");
-        tdSender.setAttribute("class", "ps-3 col-3 align-middle");
+        tdSender.setAttribute("class", "ps-3 col-3 align-middle text-truncate");
         if (mailbox === "sent") {
           tdSender.innerHTML = `${email.recipients}`;
         } else {
@@ -215,7 +249,7 @@ function load_mailbox(mailbox) {
 
         // email > timestamp
         let tdTimestamp = document.createElement("td");
-        tdTimestamp.setAttribute("class", "pe-3 col-3 align-middle text-end");
+        tdTimestamp.setAttribute("class", "pe-3 col-3 align-middle text-end text-truncate");
         let splitDate = `${email.timestamp}`.split(",");
         tdTimestamp.innerHTML = splitDate[0];
 
@@ -226,12 +260,12 @@ function load_mailbox(mailbox) {
         tbody.appendChild(tr);
       });
     } catch(err) { // just in case
-      grayBox.classList.add("text-center");
-      grayBox.innerHTML = "No emails.";
+      emailsContainer.classList.add("text-center");
+      emailsContainer.innerHTML = "No emails.";
     }
   });
 
-  grayBox.appendChild(table);
+  emailsContainer.appendChild(table);
 }
 
 
@@ -252,11 +286,9 @@ function send_email() {
   .then(result => {
     if ("message" in result) {
       load_mailbox('sent');
-      document.querySelector("#successmessage").innerHTML = result["message"];
+      message("#successmessage", result["message"]);
     } else {
-      document.querySelector("#errormessage").innerHTML = result["error"];
+      message("#errormessage", result["error"]);
     }
   });
-
-  return false;
 }
