@@ -21,6 +21,7 @@
 5. Reply: Allow users to reply to an email.
     - When the user clicks the “Reply” button, they should be taken to the email composition form. Each composition form should be pre-filled with the content of the email, with an additional line of something like "On Jan 1 2020, 12:00 AM foo@example.com wrote:" on the email body.
     ![Reply](./static/reply_email.png)
+    ![Reply: Sent mail](./static/reply_sentmail.png)
 6. Archive and Unarchive: Allow users to archive and unarchive emails that they have received. Once an email has been archived or unarchived, load the user’s inbox. This requirement does not apply to emails in the Sent mailbox.
     - When viewing an Inbox email, the user should be presented with a button that lets them archive the email. 
     ![Archive: Archive button](./static/archive_1.png)
