@@ -33,7 +33,7 @@ function message(elementSelector, sentence) {
   document.querySelector(elementSelector).innerHTML = sentence;
   setTimeout(() => {
     document.querySelector(elementSelector).innerHTML = '';
-  }, 2000);
+  }, 3000);
 }
 
 
@@ -112,7 +112,7 @@ function load_email(id, mailbox) {
             })
           });
           load_mailbox('inbox');
-          message("#successmessage", "Email has been moved to Archive!");
+          message("#successmessage", "Moved to Archive.");
         })
       } else if (mailbox == 'archive') {
         archiveButton.innerHTML = "Unarchive";
@@ -124,7 +124,7 @@ function load_email(id, mailbox) {
             })
           });
           load_mailbox('inbox');
-          message("#successmessage", "Email has been removed from Archive!");
+          message("#successmessage", "Removed from Archive.");
         })
       }
       
