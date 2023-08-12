@@ -14,7 +14,7 @@
         <hr>
         <!-- Compose button -->
         <div class="d-grid gap-2">
-            <button class="btn btn-danger" id="compose">
+            <button class="btn btn-danger sb" id="compose" data-content="compose-view">
                 <!-- <i class="me-2 bi bi-pencil-square"></i> -->
                 Compose
             </button>
@@ -23,19 +23,19 @@
         <!-- Mailboxes -->
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="#" id="inbox" class="nav-link link-body-emphasis active" aria-current="page">
+                <a href="#" id="inbox" data-content="emails-view" class="nav-link link-body-emphasis active sb" aria-current="page">
                     <i class="me-2 bi bi-envelope"></i>
                     Inbox
                 </a>
             </li>
             <li>
-                <a href="#" id="sent" class="nav-link link-body-emphasis">
+                <a href="#" id="sent" data-content="emails-view" class="nav-link link-body-emphasis sb">
                     <i class="me-2 bi bi-send-check"></i>
                     Sent
                 </a>
             </li>
             <li>
-                <a href="#" id="archive" class="nav-link link-body-emphasis">
+                <a href="#" id="archive" data-content="emails-view" class="nav-link link-body-emphasis sb">
                     <i class="me-2 bi bi-archive"></i>
                     Archive
                 </a>
@@ -58,18 +58,17 @@
                 </div>
             </li>
         </ul>
-
     </div>
 
     <!-- CONTENT -->
     <div class="px-4 py-5 col-lg-9">
 
         <!-- Mailboxes -->
-        <div id="emails-view">
+        <div id="emails-view" class="mbcontent">
         </div>
         
         <!-- Compose mail -->
-        <div id="compose-view">
+        <div id="compose-view" class="mbcontent">
             <h3 id="compose-title" class="comfortaa px-3 d-inline-block"></h3>
             <div class="content rounded px-3 py-4">
                 <form id="compose-form">
@@ -77,7 +76,7 @@
                         From: <input disabled class="form-control form-control-sm" value="{{ request.user.email }}">
                     </div>
                     <div class="mb-3">
-                        To: <input id="compose-recipients" class="form-control form-control-sm">
+                        To: <input id="compose-recipients" class="form-control form-control-sm" autofocus>
                     </div>
                     <div class="mb-3">
                         <input class="form-control form-control-sm" id="compose-subject" placeholder="Subject">
@@ -93,7 +92,7 @@
         </div>
 
         <!-- Single email -->
-        <div id="email-view">
+        <div id="email-view" class="mbcontent">
         </div>
     </div>
 </div>
