@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   document.querySelector("#compose").addEventListener('click', () => {
-    // compose_email();
     load_mailbox('compose');
   });
 
@@ -40,15 +39,16 @@ function message(elementSelector, sentence) {
   }, 3000);
 }
 
-
 // Including reply and archive/unarchive functions
 function load_email(id, mailbox) {
-  // Show single email view and hide other views
-  document.querySelector('#emails-view').style.display = 'none';
-  document.querySelector('#email-view').style.display = 'block';
-  document.querySelector('#compose-view').style.display = 'none';
-
   let emailView = document.querySelector('#email-view');
+
+  // Show single email view and hide other views
+  document.querySelectorAll('.mbcontent').forEach(mbcontent => {
+    mbcontent.style.display = 'none';
+  });
+  emailView.style.display = 'block';
+
   emailView.setAttribute("class", "content rounded px-3 mbcontent");
 
   fetch(`/emails/${id}`)
@@ -86,8 +86,8 @@ function load_email(id, mailbox) {
 
       if (mailbox == 'inbox') {
         archiveButton.innerHTML = "Archive";
-        archiveButton.addEventListener('click', () => {
-          fetch(`/emails/${email.id}`, {
+        archiveButton.addEventListener('click', async () => {
+          await fetch(`/emails/${email.id}`, {
             method: 'PUT',
             body: JSON.stringify({
               archived: true
@@ -98,8 +98,8 @@ function load_email(id, mailbox) {
         })
       } else if (mailbox == 'archive') {
         archiveButton.innerHTML = "Unarchive";
-        archiveButton.addEventListener('click', () => {
-          fetch(`/emails/${email.id}`, {
+        archiveButton.addEventListener('click', async () => {
+          await fetch(`/emails/${email.id}`, {
             method: 'PUT',
             body: JSON.stringify({
               archived: false
@@ -142,7 +142,6 @@ function load_email(id, mailbox) {
 
   });
 }
-
 
 function load_mailbox(mailbox) {
   let active = document.querySelector(`#${mailbox}`);
