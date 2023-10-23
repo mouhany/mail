@@ -5,9 +5,8 @@
 <div class="row">
     <!-- SIDEBAR -->
     <div class="px-4 pt-5 col-lg-3">
-
         <!-- Title -->
-        <a href="/" class="align-middle comfortaa px-3 d-inline-block link-body-emphasis text-decoration-none link-body-emphasis text-decoration-none">
+        <a href="/" class="px-3 d-inline-block align-middle link-body-emphasis text-decoration-none comfortaa">
             <i class="fs-2 me-2 bi bi-mailbox"></i>
             <span class="fs-2">mail</span>
         </a>
@@ -51,9 +50,9 @@
                     <i class="me-2 bi bi-box-arrow-right"></i>
                     <strong>{{ request.user.email }}</strong>
                 </button>
-                <div  id="dashboard-collapse" class="collapse ms-3">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal ms-3">
-                        <li><a href="{% url 'logout' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded ms-1">Log Out</a></li>
+                <div  id="dashboard-collapse" class="ms-3 collapse">
+                    <ul class="ms-3 btn-toggle-nav list-unstyled fw-normal">
+                        <li><a href="{% url 'logout' %}" class="ms-1 link-body-emphasis d-inline-flex text-decoration-none rounded ">Log Out</a></li>
                     </ul>
                 </div>
             </li>
@@ -62,15 +61,13 @@
 
     <!-- CONTENT -->
     <div class="px-4 py-5 col-lg-9">
-
         <!-- Mailboxes -->
         <div id="emails-view" class="mbcontent">
         </div>
-        
         <!-- Compose mail -->
         <div id="compose-view" class="mbcontent">
-            <h3 id="compose-title" class="comfortaa px-3 d-inline-block"></h3>
-            <div class="content rounded px-3 py-4">
+            <h3 id="compose-title" class="px-3 d-inline-block comfortaa"></h3>
+            <div class="px-3 py-4 content rounded">
                 <form id="compose-form">
                     <div class="mb-3">
                         From: <input disabled class="form-control form-control-sm" value="{{ request.user.email }}">
@@ -90,15 +87,13 @@
                 </form>
             </div>
         </div>
-
         <!-- Single email -->
         <div id="email-view" class="mbcontent">
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'mail/inbox.js' %}"></script>
+<script src="{% static 'mail/inbox.js' %}"></script>
 {% endblock %}
